@@ -2,6 +2,7 @@ const express = require("express")
 const sqlite3 = require("sqlite3").verbose()
 const cors = require("cors")
 const bcrypt = require("bcrypt")
+const { json } = require("express/lib/response")
 
 const app = express()
 const PORT = 3000
@@ -19,12 +20,12 @@ db.run(`CREATE TABLE IF NOT EXISTS usuarios (
     )`
 )
 
-app.post("/usuario", async (req, res) => {
+app.post("/usuarios", async (req, res) => {
     console.log(req.body);
 
 
     let nome = req.body.nome
-    let email = req.body.emal
+    let email = req.body.email
     let senha = req.body.senha
 
     let senhaHash = await bcrypt.hash(senha, 10)
@@ -37,6 +38,31 @@ app.post("/usuario", async (req, res) => {
             id: this.lastID,
             nome,
             email
-        })
+        }),
     )
 })
+
+app.get("/usuarios", (req, res) => {
+    db.all(`SELECT id, nome FROM usuarios`, [], (err,cors) => {
+        res.json(cors)
+    })
+
+}),
+
+app.get("/usuarios/:id", (req, res) => {
+    let idUsuario = req.params.id;
+
+    db.get(`SELECT id, nome, email FROM usuarios WHERE id = ?`,
+    [idUsuario], (err, result) => {
+        if(result){
+            res.json(result)
+        }else{
+            res.status(404).json({
+                "message" : "Usuário não encontrado"
+            })
+        }
+    }
+    )
+})
+
+app.listen(PORT, () => console.log(`servidor rodando em http://localhost:${PORT}`))
