@@ -5,10 +5,10 @@ Inicialize o projeto Node rodando no terminal:
 npm init -y
 
 Instale as dependências (bibliotecas):
-npm instal express sqlite3 cors bcrypt
+npm install express sqlite3 cors bcrypt
 
 Rode o servidor backend no terminal (utilizando o nome do arquivo principal):
-node server.js
+node server.js 
 
-O servidor vai rodar no url:
+O servidor vai rodar na url:
 http://localhost:3000
